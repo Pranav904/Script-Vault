@@ -1,0 +1,173 @@
+<%- include("partials/header.ejs") %>
+<div class="container col-xxl-8 px-4 py-5">
+  <div class="row flex-lg-row-reverse align-items-center g-5 py-3">
+    <div class="col-lg-6">
+      <form action="/allblogs" method="POST">
+        <div class="mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input
+            type="text"
+            name="title"
+            class="form-control"
+            placeholder="Enter your blog title"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="content" class="form-label">Your Blog:</label>
+          <textarea
+            name="content"
+            class="form-control"
+            id="blogContent"
+            rows="3"
+          ></textarea>
+        </div>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+          <button
+            type="submit"
+            id="post"
+            class="btn btn-primary btn-lg px-4 gap-3"
+          >
+            Post
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-6">
+      <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-4">
+        Script Vault
+      </h1>
+      <p class="lead text-wrap fs-5">
+        Script Vault is your go-to web app for quick and easy note management.
+        Create, update, and delete notes seamlessly, all displayed right here on
+        the homepage.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="album py-5 bg-body-tertiary">
+  <div class="container">
+    <h1 class="fw-light mb-4 text-center">Live Blogs</h1>
+    <% if(Object.keys(locals.blogList).length === 0){ %>
+    <div class="container text-center">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="15vw"
+        height="20vh"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M18.5 20C18.5 20.275 18.276 20.5 18 20.5H12.2678C11.9806 21.051 11.6168 21.5557 11.1904 22H18C19.104 22 20 21.104 20 20V9.828C20 9.298 19.789 8.789 19.414 8.414L13.585 2.586C13.57 2.57105 13.5531 2.55808 13.5363 2.5452C13.5238 2.53567 13.5115 2.5262 13.5 2.516C13.429 2.452 13.359 2.389 13.281 2.336C13.2557 2.31894 13.2281 2.30548 13.2005 2.29207C13.1845 2.28426 13.1685 2.27647 13.153 2.268C13.1363 2.25859 13.1197 2.24897 13.103 2.23933C13.0488 2.20797 12.9944 2.17648 12.937 2.152C12.74 2.07 12.528 2.029 12.313 2.014C12.2933 2.01274 12.2738 2.01008 12.2542 2.00741C12.2271 2.00371 12.1999 2 12.172 2H6C4.896 2 4 2.896 4 4V11.4982C4.47417 11.3004 4.97679 11.1572 5.5 11.0764V4C5.5 3.725 5.724 3.5 6 3.5H12V8C12 9.104 12.896 10 14 10H18.5V20ZM13.5 4.621L17.378 8.5H14C13.724 8.5 13.5 8.275 13.5 8V4.621Z"
+          fill="#212121"
+        />
+        <path
+          d="M12 17.5C12 20.5376 9.53757 23 6.5 23C3.46243 23 1 20.5376 1 17.5C1 14.4624 3.46243 12 6.5 12C9.53757 12 12 14.4624 12 17.5ZM2.5 17.5C2.5 18.3335 2.75495 19.1075 3.19112 19.7482L8.74822 14.1911C8.10751 13.755 7.33353 13.5 6.5 13.5C4.29086 13.5 2.5 15.2909 2.5 17.5ZM6.5 21.5C8.70914 21.5 10.5 19.7091 10.5 17.5C10.5 16.6665 10.245 15.8925 9.80888 15.2518L4.25178 20.8089C4.89249 21.245 5.66647 21.5 6.5 21.5Z"
+          fill="#212121"
+        />
+      </svg>
+      <p class="lead mt-2">No Blogs Found.</p>
+    </div>
+    <% }else{ %>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-3">
+      <% Object.keys(blogList).forEach((blogId)=> {%>
+      <div class="col" id= <%= "blog-" + blogId %> >
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title"><%= blogList[blogId].title %></h5>
+            <p class="card-text"><%= blogList[blogId].content %></p>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="d-flex">
+                <div
+                  class="modal fade"
+                  id="editModalCenter"
+                  tabindex="-1"
+                  aria-labelledby="editModalCenterTitle"
+                  style="display: none"
+                  aria-hidden="true"
+                >
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="editModalCenterTitle">
+                          Edit
+                        </h1>
+                        <button
+                          type="button"
+                          class="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <form action="/editblog" method="POST">
+                        <div class="modal-body">
+                          <div class="mb-3">
+                            <input
+                              type="hidden"
+                              name="editBlogId"
+                              value="<%= blogId %>"
+                            />
+                            <label for="editTitle" class="form-label"
+                              >Title</label
+                            >
+                            <input
+                              type="text"
+                              name="editTitle"
+                              class="form-control"
+                              placeholder="Enter your blog title"
+                            />
+                          </div>
+                          <div class="mb-3">
+                            <label for="editContent" class="form-label"
+                              >Your Blog:</label
+                            >
+                            <textarea
+                              name="editContent"
+                              class="form-control"
+                              id="blogContent"
+                              rows="3"
+                            ></textarea>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                          >
+                            Close
+                          </button>
+                          <button type="submit" class="btn btn-primary">
+                            Save changes
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-primary me-3"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editModalCenter"
+                >
+                  Edit
+                </button>
+                <form action="/deleteblog" method="POST">
+                  <input type="hidden" name="delBlogId" value="<%= blogId %>" />
+                  <button type="submit" class="btn btn-outline-danger">
+                    Delete
+                  </button>
+                </form>
+              </div>
+              <!-- <small class="text-body-secondary">time</small> !!! Feature to be added -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
+  <%- include("partials/footer.ejs") %>
+</div>
