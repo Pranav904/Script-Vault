@@ -80,7 +80,7 @@
               <div class="d-flex">
                 <div
                   class="modal fade"
-                  id="editModalCenter"
+                  id= <%= "editModalCenter" + blogId %>
                   tabindex="-1"
                   aria-labelledby="editModalCenterTitle"
                   style="display: none"
@@ -105,7 +105,7 @@
                             <input
                               type="hidden"
                               name="editBlogId"
-                              value="<%= blogId %>"
+                              value= <%= blogId %>
                             />
                             <label for="editTitle" class="form-label"
                               >Title</label
@@ -119,7 +119,7 @@
                           </div>
                           <div class="mb-3">
                             <label for="editContent" class="form-label"
-                              >Your Blog:</label
+                              >Edit Your Blog:</label
                             >
                             <textarea
                               name="editContent"
@@ -149,12 +149,12 @@
                   type="button"
                   class="btn btn-primary me-3"
                   data-bs-toggle="modal"
-                  data-bs-target="#editModalCenter"
+                  data-bs-target= <%= "#editModalCenter" + blogId %>
                 >
                   Edit
                 </button>
                 <form action="/deleteblog" method="POST">
-                  <input type="hidden" name="delBlogId" value="<%= blogId %>" />
+                  <input type="hidden" name="delBlogId" value=<%= blogId %> />
                   <button type="submit" class="btn btn-outline-danger">
                     Delete
                   </button>

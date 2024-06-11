@@ -28,7 +28,6 @@ app.post("/allblogs", (req, res) => {
     title: req.body["title"],
     content: req.body["content"],
   };
-  console.log(blogs);
   res.render(__dirname + "/views/index.ejs", {
     blogList: blogs,
   });
@@ -37,19 +36,14 @@ app.post("/allblogs", (req, res) => {
 app.post("/deleteblog", (req, res) => {
   const blogId = req.body.delBlogId;
   delete blogs[blogId];
-  console.log(blogs);
-  res.render(__dirname + "/views/index.ejs", {
-    blogList: blogs,
-  });
+  res.redirect("/");
 });
 
 app.post("/editblog", (req, res) => {
   const blogId = req.body.editBlogId;
   blogs[blogId].title = req.body.editTitle;
   blogs[blogId].content = req.body.editContent;
-  res.render(__dirname + "/views/index.ejs", {
-    blogList: blogs,
-  });
+  res.redirect("/");
 });
 
 app.listen(port, () => {
